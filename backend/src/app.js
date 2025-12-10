@@ -109,7 +109,27 @@ app.get('/api/search', async (req, res) => {
       return res.status(400).json({ error: 'Parameter "name" is required' });
     }
     
-    const data = await getObjectCloseApproaches(name, dateMin, dateMax, distMax);
+    // Map popular names to official designations
+    const nameMapping = {
+      'apophis': '99942',
+      'eros': '433',
+      'bennu': '101955',
+      'ryugu': '162173',
+      'didymos': '65803',
+      'dimorphos': '65803',
+      'halley': '1P',
+      'halleya': '1P',
+      'oumuamua': '1I',
+      'borisov': '2I',
+      'ceres': '1',
+      'pallas': '2',
+      'vesta': '4',
+      'psyche': '16'
+    };
+    
+    const searchName = nameMapping[name.toLowerCase()] || name;
+    
+    const data = await getObjectCloseApproaches(searchName, dateMin, dateMax, distMax);
     
     if (format === 'parsed') {
       res.json(parseCloseApproachData(data));
